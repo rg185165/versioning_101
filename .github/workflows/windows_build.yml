@@ -21,7 +21,7 @@ jobs:
         version: ''
         build_version: ''
       run: |
-        Set-Variable -Name version -Value Get-Content -Path "${{ github.workspace }}\version"
+        Set-Variable -Name version -Value (Get-Content -Path "${{ github.workspace }}\version")
         Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
         echo "path: ${{ github.workspace }}\version"
         echo "version: ${version}"
