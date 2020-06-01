@@ -17,13 +17,16 @@ jobs:
       # master - Zip using branch name and build number (example: referencing the version file the build will be packaged as 1.0.1.build_number)
     - name: Zip using version file and build number
       if: github.ref == 'refs/heads/master'
+      env:
+        version: ''
+        build_version: ''
       run: |
-        def version = Get-Content -Path "${{ github.workspace }}\version"
-        def build_version = "${version}.${{ github.run_number }}"
+        env.version = Get-Content -Path "${{ github.workspace }}\version"
+        env.build_version = "${env.version}.${{ github.run_number }}"
         echo "path: ${{ github.workspace }}\version"
         echo "version: ${version}"
-        echo "build_version: ${build_version}"
-        Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${build_version}v1.zip
+        echo "build_version: ${env.build_version}"
+        Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${env.build_version}v1.zip
     
       # release/0.0.0 - Zip using branch name and build number (example: release/1.0.2 will be packaged as 1.0.2.build_number)
     - name: Zip using branch name and build number
@@ -33,5 +36,5 @@ jobs:
         def build_version = "${base_version}.${{ github.run_number }}"
         Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${build_version}v2.zip
     
-    - name: Upload Zip
-      run:  cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}/versioning_${build_version}.*.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
+    # - name: Upload Zip
+    #   run:  cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}/versioning_${build_version}.*.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
