@@ -32,4 +32,7 @@ jobs:
         Compress-Archive -Path ${{ github.workspace }}\README.md -DestinationPath ${{ github.workspace }}\versioning_${build_version}v2.zip
     
     - name: Upload Zip
-      run:  cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}\versioning_.*.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
+      run:  |
+        Set-Variable -Name version -Value (Get-Content -Path "${{ github.workspace }}\version")
+        Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
+        cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}\versioning_${build_version}.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
