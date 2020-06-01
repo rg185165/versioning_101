@@ -28,7 +28,7 @@ jobs:
     
       # release/0.0.0 - Zip using branch name and build number (example: release/1.0.2 will be packaged as 1.0.2.build_number)
     - name: Zip using branch name and build number
-      if: contains(github.ref, "release")
+      if: contains(github.ref, 'release')
       run: |
         base_version = ${{ github.ref }}.Substring(8)
         build_version = "${base_version}.${{ github.run_number }}"
