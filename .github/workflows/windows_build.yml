@@ -21,12 +21,12 @@ jobs:
         version: ''
         build_version: ''
       run: |
-        env.version = Get-Content -Path "${{ github.workspace }}\version"
-        env.build_version = "${env.version}.${{ github.run_number }}"
+        Set-Variable -Name version -Value Get-Content -Path "${{ github.workspace }}\version"
+        Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
         echo "path: ${{ github.workspace }}\version"
         echo "version: ${version}"
-        echo "build_version: ${env.build_version}"
-        Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${env.build_version}v1.zip
+        echo "build_version: ${build_version}"
+        Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${build_version}v1.zip
     
       # release/0.0.0 - Zip using branch name and build number (example: release/1.0.2 will be packaged as 1.0.2.build_number)
     - name: Zip using branch name and build number
