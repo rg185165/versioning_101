@@ -18,8 +18,8 @@ jobs:
     - name: Zip using version file and build number
       if: github.ref == 'refs/heads/master'
       run: |
-        version = readFile("${{ github.workspace }}\version")
-        build_version = "${version}.${{ github.run_number }}"
+        def version = readFile("${{ github.workspace }}\version")
+        def build_version = "${version}.${{ github.run_number }}"
         echo "path: ${{ github.workspace }}\version"
         echo "version: ${version}"
         echo "build_version: ${build_version}"
@@ -29,8 +29,8 @@ jobs:
     - name: Zip using branch name and build number
       if: contains(github.ref, 'release')
       run: |
-        base_version = ${{ github.ref }}.Substring(8)
-        build_version = "${base_version}.${{ github.run_number }}"
+        def base_version = ${{ github.ref }}.Substring(8)
+        def build_version = "${base_version}.${{ github.run_number }}"
         Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${build_version}v2.zip
     
     - name: Upload Zip
