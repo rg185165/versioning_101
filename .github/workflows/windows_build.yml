@@ -18,9 +18,13 @@ jobs:
     - name: Zip using version file and build number
       if: github.ref == 'refs/heads/master'
       env:
-        version: readFile("${{ github.workspace }}/VERSION_BASE")
+        version: readFile("${{ github.workspace }}\version")
         build_version: "${env.version}.${{ github.run_number }}"
-      run: Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${env.build_version}v1.zip
+      run: |
+        echo "path: ${{ github.workspace }}\version"
+        echo "version: ${env.version}"
+        echo "build_version: ${env.build_version}"
+        Compress-Archive -Path ${{ github.workspace }}/README.md -DestinationPath ${{ github.workspace }}/versioning_${env.build_version}v1.zip
     
       # release/0.0.0 - Zip using branch name and build number (example: release/1.0.2 will be packaged as 1.0.2.build_number)
     - name: Zip using branch name and build number
