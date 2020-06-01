@@ -21,18 +21,20 @@ jobs:
         Set-Variable -Name version -Value (Get-Content -Path "${{ github.workspace }}\version")
         Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
         echo "creating zip: ${{ github.workspace }}\versioning_${build_version}v1.zip"
-        Compress-Archive -Path ${{ github.workspace }}\README.md -DestinationPath ${{ github.workspace }}\versioning_${build_version}v1.zip
+        Compress-Archive -Path ${{ github.workspace }}\README.md -DestinationPath ${{ github.workspace }}\versioning_${build_version}.zip
     
+    - name: Upload master Zip
+      run:  |
+        Set-Variable -Name version -Value (Get-Content -Path "${{ github.workspace }}\version")
+        Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
+        cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}\versioning_${build_version}.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
+      
       # release/0.0.0 - Zip using branch name and build number (example: release/1.0.2 will be packaged as 1.0.2.build_number)
     - name: Zip using branch name and build number
       if: contains(github.ref, 'release')
       run: |
         Set-Variable -Name base_version -Value ${{ github.ref }}.Substring(8)
         Set-Variable -Name build_version -Value "${base_version}.${{ github.run_number }}"
-        Compress-Archive -Path ${{ github.workspace }}\README.md -DestinationPath ${{ github.workspace }}\versioning_${build_version}v2.zip
+        Compress-Archive -Path ${{ github.workspace }}\README.md -DestinationPath ${{ github.workspace }}\versioning_${build_version}.zip
     
-    - name: Upload Zip
-      run:  |
-        Set-Variable -Name version -Value (Get-Content -Path "${{ github.workspace }}\version")
-        Set-Variable -Name build_version -Value "${version}.${{ github.run_number }}"
-        cmd /c curl -u ${{ secrets.ARTIFACTORY_USER }}:${{ secrets.ARTIFACTORY_KEY }} -T ${{ github.workspace }}\versioning_${build_version}.zip "https://${{ secrets.ARTIFACTORY_KEY }}/artifactory/${{ secrets.ARTIFACTORY_PATH }}"
+    
