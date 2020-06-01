@@ -18,7 +18,7 @@ jobs:
     - name: Zip using version file and build number
       if: github.ref == 'refs/heads/master'
       run: |
-        def version = readFile("${{ github.workspace }}\version")
+        def version = Get-Content -Path "${{ github.workspace }}\version"
         def build_version = "${version}.${{ github.run_number }}"
         echo "path: ${{ github.workspace }}\version"
         echo "version: ${version}"
