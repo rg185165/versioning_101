@@ -17,9 +17,6 @@ jobs:
       # master - Zip using branch name and build number (example: referencing the version file the build will be packaged as 1.0.1.build_number)
     - name: Zip using version file and build number
       if: github.ref == 'refs/heads/master'
-      env:
-        version: readFile("${{ github.workspace }}\version")
-        build_version: "${env.version}.${{ github.run_number }}"
       run: |
         version = readFile("${{ github.workspace }}\version")
         build_version = "${version}.${{ github.run_number }}"
